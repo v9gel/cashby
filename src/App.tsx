@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+  App,
+  Page,
+  Navbar,
+  Block,
+  BlockTitle,
+  List,
+  ListInput,
+  Button,
+} from "konsta/react";
 
-function App() {
-  const [count, setCount] = useState(0)
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+
+type Inputs = {
+  example: string;
+};
+
+export default function MyApp() {
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const values = watch();
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <App theme="ios">
+      <Page>
+        <Navbar title="My App" />
+        <Block>
+          <BlockTitle>Default</BlockTitle>
+          <List strongIos insetIos>
+            <Controller
+              control={control}
+              name="example"
+              defaultValue={"текст"}
+              render={({ field: { value, onChange } }) => (
+                <ListInput
+                  label="Обычный"
+                  type="text"
+                  placeholder="Обычный"
+                  value={value}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </List>
+          {JSON.stringify(values)}
+          <Button onClick={handleSubmit(onSubmit)}>Кнопка</Button>
+        </Block>
+      </Page>
+    </App>
+  );
 }
-
-export default App
